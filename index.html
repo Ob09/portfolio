@@ -16,16 +16,42 @@
         --shadow-md:0 10px 24px rgba(17,17,18,0.09), 0 2px 6px rgba(17,17,18,0.06);
         --shadow-lg:0 24px 48px rgba(17,17,18,0.16), 0 6px 16px rgba(17,17,18,0.08);
     }
+    html[data-theme="dark"]{
+        --white:#131315; --offwhite:#1a1a1c; --black:#f2f2f3;
+        --charcoal:#050506; --charcoal-2:#0c0c0d;
+        --gray-800:#d6d6d8; --gray-500:#9a9a9e; --gray-300:#3a3a3d; --border:#2c2c2f;
+    }
+    html{transition:background .3s ease;}
+    body{transition:background .3s ease, color .3s ease;}
+
+    #scrollProgress{
+        position:fixed; top:0; left:0; height:3px; width:0%; z-index:1100;
+        background:linear-gradient(90deg, var(--black), var(--gray-500));
+        transition:width .1s linear;
+    }
+
+    .theme-toggle{
+        width:38px; height:38px; border-radius:50%; border:1px solid rgba(255,255,255,0.35);
+        background:rgba(255,255,255,0.12); backdrop-filter:blur(10px) saturate(200%); -webkit-backdrop-filter:blur(10px) saturate(200%);
+        display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--black);
+        transition:all .3s ease; flex-shrink:0; font-size:.9rem;
+    }
+    .theme-toggle:hover{transform:translateY(-2px); box-shadow:var(--shadow-sm);}
+    .theme-toggle .fa-sun{display:none;}
+    html[data-theme="dark"] .theme-toggle .fa-moon{display:none;}
+    html[data-theme="dark"] .theme-toggle .fa-sun{display:inline;}
+
     *{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;}
-    body{font-family:'Inter',sans-serif; background:var(--white); color:var(--black); line-height:1.65; -webkit-font-smoothing:antialiased;}
+    body{font-family:'Inter',sans-serif; background:var(--white); color:var(--black); line-height:1.65; -webkit-font-smoothing:antialiased; overflow-x:hidden;}
     .container{max-width:1180px; margin:0 auto; padding:0 32px;}
     a{color:inherit; text-decoration:none;}
     img{max-width:100%; display:block;}
     ::selection{background:var(--black); color:#fff;}
     :focus-visible{outline:2px solid var(--black); outline-offset:3px;}
 
-    header{position:sticky; top:0; z-index:1000; background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); transition:box-shadow .3s ease;}
+    header{position:sticky; top:0; z-index:1000; background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); transition:box-shadow .3s ease, background .3s ease;}
+    html[data-theme="dark"] header{background:rgba(19,19,21,0.88);}
     header.scrolled{box-shadow:0 8px 24px rgba(17,17,18,0.05);}
     nav{display:flex; align-items:center; justify-content:space-between; padding:1.4rem 0; transition:padding .3s ease; position:relative;}
     header.scrolled nav{padding:1rem 0;}
@@ -38,11 +64,12 @@
     .nav-links a::after{content:''; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--black); transition:width .3s;}
     .nav-links a:hover::after{width:100%;}
     .nav-cta{
-        border:1px solid rgba(17,17,18,0.15); padding:.6rem 1.3rem; font-size:.84rem; font-weight:500;
-        transition:all .3s ease; white-space:nowrap; background:rgba(255,255,255,0.4);
-        backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+        border:1px solid rgba(255,255,255,0.35); padding:.6rem 1.3rem; font-size:.84rem; font-weight:500; border-radius:50px;
+        transition:all .35s cubic-bezier(.2,.8,.2,1); white-space:nowrap; background:rgba(255,255,255,0.12);
+        backdrop-filter:blur(14px) saturate(200%); -webkit-backdrop-filter:blur(14px) saturate(200%);
+        box-shadow:inset 0 1px 1px rgba(255,255,255,0.5), 0 6px 16px rgba(17,17,18,0.06);
     }
-    .nav-cta:hover{background:var(--charcoal); color:#fff; box-shadow:var(--shadow-sm);}
+    .nav-cta:hover{background:rgba(17,17,18,0.65); color:#fff; border-color:rgba(255,255,255,0.2); transform:translateY(-2px); box-shadow:inset 0 1px 1px rgba(255,255,255,0.15), 0 12px 24px rgba(17,17,18,0.16);}
     .nav-toggle{display:none; width:38px; height:38px; align-items:center; justify-content:center; background:none; border:1px solid var(--border); border-radius:8px; font-size:1.05rem; color:var(--black); cursor:pointer; flex-shrink:0;}
 
     @media (max-width:900px){
@@ -54,6 +81,7 @@
             padding:.5rem 32px 1rem; max-height:0; overflow:hidden; opacity:0;
             transition:max-height .35s ease, opacity .3s ease, padding .35s ease;
         }
+        html[data-theme="dark"] .nav-links{background:rgba(19,19,21,0.9);}
         .nav-links.open{max-height:80vh; opacity:1; padding:.9rem 32px 1.3rem;}
         .nav-links li{width:100%;}
         .nav-links a{display:block; padding:.85rem 0; font-size:1rem; border-bottom:1px solid var(--border);}
@@ -71,6 +99,193 @@
 
     .reveal{opacity:0; transform:translateY(24px);}
 
+    .scroll-robot{
+        position:fixed; top:110px; left:40px; width:84px; height:126px;
+        z-index:500; pointer-events:auto; cursor:pointer;
+    }
+    .robot-tilt{ position:relative; width:100%; height:100%; }
+    .robot-spin{ position:relative; width:100%; height:100%; }
+    .robot-spin.spinning{ animation:spin360 .9s cubic-bezier(.4,0,.2,1); }
+    @keyframes spin360{ from{ transform:rotate(0deg); } to{ transform:rotate(360deg); } }
+    .robot-body{
+        position:relative; width:100%; height:100%; animation:robotBob 2.8s ease-in-out infinite;
+    }
+    .robot-head{
+        position:relative; width:54px; height:50px; margin:0 auto;
+        border-radius:50%;
+        background:linear-gradient(145deg, #525255 0%, #232325 55%, #0a0a0b 100%);
+        border:1px solid rgba(255,255,255,0.2);
+        box-shadow:inset -5px -7px 12px rgba(0,0,0,0.45), inset 4px 5px 9px rgba(255,255,255,0.3), 0 14px 24px rgba(0,0,0,0.35);
+        display:flex; align-items:center; justify-content:center; gap:8px; z-index:2;
+    }
+    .robot-head::before{
+        content:''; position:absolute; top:10%; left:14%; width:36%; height:26%;
+        background:radial-gradient(ellipse, rgba(255,255,255,0.92), transparent 72%);
+        border-radius:50%; filter:blur(1px);
+    }
+    .robot-eye{width:7px; height:7px; border-radius:50%; background:#fff; box-shadow:0 0 6px rgba(255,255,255,0.8); animation:robotBlink 4.5s ease-in-out infinite; position:relative; z-index:1;}
+    .robot-antenna{
+        position:absolute; top:-13px; left:50%; transform:translateX(-50%); width:2px; height:13px; background:rgba(255,255,255,0.5);
+    }
+    .robot-antenna::after{
+        content:''; position:absolute; top:-6px; left:50%; transform:translateX(-50%);
+        width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.95);
+        box-shadow:0 0 10px rgba(255,255,255,0.85);
+    }
+    .robot-torso{
+        position:relative; width:50px; height:46px; margin:-10px auto 0;
+        border-radius:50%;
+        background:linear-gradient(150deg, #46464a 0%, #1c1c1e 55%, #050506 100%);
+        border:1px solid rgba(255,255,255,0.16);
+        box-shadow:inset -5px -7px 12px rgba(0,0,0,0.4), inset 4px 5px 9px rgba(255,255,255,0.25), 0 16px 28px rgba(0,0,0,0.3);
+        display:flex; align-items:center; justify-content:center; z-index:1;
+    }
+    .robot-torso::before{
+        content:''; position:absolute; top:8%; left:16%; width:34%; height:22%;
+        background:radial-gradient(ellipse, rgba(255,255,255,0.6), transparent 72%);
+        border-radius:50%; filter:blur(1px);
+    }
+    .robot-chest-light{
+        width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,0.95); position:relative; z-index:1;
+        box-shadow:0 0 11px rgba(255,255,255,0.85); animation:chestPulse 2.2s ease-in-out infinite;
+    }
+    .robot-arm{
+        position:absolute; top:8px; width:9px; height:22px; border-radius:40%;
+        background:linear-gradient(150deg, #3f3f42, #101011);
+        border:1px solid rgba(255,255,255,0.14);
+        box-shadow:inset -2px -2px 5px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.2);
+    }
+    .robot-arm.left{left:-9px; transform:rotate(-14deg);}
+    .robot-arm.right{right:-9px; transform:rotate(14deg);}
+    .robot-hand{
+        position:absolute; bottom:-5px; left:50%; transform:translateX(-50%);
+        width:9px; height:9px; border-radius:50%;
+        background:linear-gradient(145deg, #4a4a4d, #121213);
+        border:1px solid rgba(255,255,255,0.2);
+        box-shadow:inset -1px -1px 3px rgba(0,0,0,0.4), inset 1px 1px 2px rgba(255,255,255,0.25);
+    }
+    .robot-thruster{
+        width:32px; height:11px; margin:0 auto; border-radius:50%;
+        background:radial-gradient(ellipse, rgba(255,255,255,0.55), transparent 75%);
+        filter:blur(2.5px); animation:thrusterPulse 1.4s ease-in-out infinite;
+    }
+    @keyframes robotBob{
+        0%,100%{ transform:translateY(0); }
+        50%{ transform:translateY(-10px); }
+    }
+    @keyframes robotBlink{
+        0%,90%,100%{ transform:scaleY(1); }
+        95%{ transform:scaleY(0.15); }
+    }
+    @keyframes chestPulse{
+        0%,100%{ opacity:.6; transform:scale(0.9); } 50%{ opacity:1; transform:scale(1.15); }
+    }
+    @keyframes thrusterPulse{
+        0%,100%{ opacity:.35; transform:scaleX(0.8); } 50%{ opacity:.7; transform:scaleX(1.1); }
+    }
+    .robot-body.pop{animation:robotPop .5s cubic-bezier(.34,1.56,.64,1);}
+    @keyframes robotPop{
+        0%{ transform:scale(1); } 40%{ transform:scale(1.25) rotate(5deg); } 100%{ transform:scale(1); }
+    }
+    .robot-bubble{
+        position:absolute; top:26%; left:92px; transform:translateY(-50%) translateX(-8px) scale(0.9);
+        white-space:nowrap; padding:.5rem .9rem; border-radius:12px; font-size:.76rem; font-weight:500; color:#fff;
+        background:rgba(17,17,18,0.85); backdrop-filter:blur(10px) saturate(200%); -webkit-backdrop-filter:blur(10px) saturate(200%);
+        border:1px solid rgba(255,255,255,0.3); box-shadow:0 10px 24px rgba(17,17,18,0.3), inset 0 1px 1px rgba(255,255,255,0.25);
+        opacity:0; transition:opacity .3s ease, transform .3s ease; pointer-events:none;
+    }
+    .robot-bubble::after{
+        content:''; position:absolute; top:50%; left:-5px; transform:translateY(-50%) rotate(45deg);
+        width:8px; height:8px; background:rgba(17,17,18,0.85); border-left:1px solid rgba(255,255,255,0.3); border-bottom:1px solid rgba(255,255,255,0.3);
+    }
+    .robot-bubble.show{opacity:1; transform:translateY(-50%) translateX(0) scale(1);}
+    .robot-bubble.on-right{left:auto; right:92px; transform:translateY(-50%) translateX(8px) scale(0.9);}
+    .robot-bubble.on-right::after{left:auto; right:-5px; transform:translateY(-50%) rotate(-135deg);}
+    .robot-bubble.on-right.show{transform:translateY(-50%) translateX(0) scale(1);}
+    @media (max-width:1080px){ .scroll-robot{display:none;} }
+
+    /* Reo asleep when idle */
+    .robot-body.sleeping{animation-duration:5.5s;}
+    .robot-body.sleeping .robot-eye{animation:none; transform:scaleY(0.12);}
+    .robot-body.sleeping .robot-antenna::after{animation:sleepGlow 3s ease-in-out infinite; opacity:.4;}
+    @keyframes sleepGlow{0%,100%{opacity:.25;} 50%{opacity:.55;}}
+    .robot-z{
+        position:absolute; top:-6px; right:2px; font-family:'Inter',sans-serif; font-weight:700; color:rgba(255,255,255,0.7);
+        font-size:.7rem; opacity:0; pointer-events:none;
+    }
+    .robot-body.sleeping .robot-z{animation:floatZ 2.6s ease-in-out infinite;}
+    @keyframes floatZ{0%{opacity:0; transform:translateY(0) scale(.7);} 30%{opacity:.8;} 100%{opacity:0; transform:translateY(-18px) scale(1.1);}}
+
+    /* Copy-to-clipboard tooltip */
+    .copied-toast{
+        position:fixed; bottom:1.6rem; left:50%; transform:translateX(-50%) translateY(10px); z-index:2000;
+        background:rgba(17,17,18,0.9); color:#fff; padding:.7rem 1.2rem; border-radius:50px; font-size:.85rem;
+        backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); opacity:0; transition:opacity .3s ease, transform .3s ease; pointer-events:none;
+    }
+    .copied-toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+    /* Sparkle burst */
+    .sparkle-particle{
+        position:fixed; width:6px; height:6px; border-radius:50%; background:#fff;
+        box-shadow:0 0 6px rgba(255,255,255,0.9); pointer-events:none; z-index:2000;
+    }
+
+    /* Ask Reo widget */
+    .ask-reo-btn{
+        position:fixed; bottom:1.6rem; right:1.6rem; z-index:900;
+        display:flex; align-items:center; gap:.6rem; padding:.8rem 1.3rem; border-radius:50px; cursor:pointer;
+        background:rgba(17,17,18,0.78); color:#fff; border:1px solid rgba(255,255,255,0.2);
+        backdrop-filter:blur(12px) saturate(200%); -webkit-backdrop-filter:blur(12px) saturate(200%);
+        box-shadow:0 12px 28px rgba(17,17,18,0.22); font-size:.85rem; font-weight:500; transition:transform .3s ease;
+    }
+    .ask-reo-btn:hover{transform:translateY(-3px);}
+    .ask-reo-panel{
+        position:fixed; bottom:5.2rem; right:1.6rem; z-index:900; width:290px; max-width:calc(100vw - 2.4rem);
+        background:rgba(255,255,255,0.85); backdrop-filter:blur(20px) saturate(200%); -webkit-backdrop-filter:blur(20px) saturate(200%);
+        border:1px solid rgba(255,255,255,0.5); border-radius:18px; box-shadow:0 24px 50px rgba(17,17,18,0.2);
+        padding:1.2rem; opacity:0; transform:translateY(16px) scale(.96); pointer-events:none; transition:all .3s cubic-bezier(.2,.8,.2,1);
+    }
+    .ask-reo-panel.open{opacity:1; transform:translateY(0) scale(1); pointer-events:auto;}
+    .ask-reo-panel h4{font-size:.92rem; font-weight:600; margin-bottom:.8rem; display:flex; align-items:center; gap:.5rem;}
+    .ask-reo-questions{display:flex; flex-direction:column; gap:.5rem; margin-bottom:.8rem;}
+    .ask-reo-q{
+        text-align:left; font-size:.8rem; padding:.55rem .8rem; border-radius:10px; border:1px solid var(--border);
+        background:rgba(255,255,255,0.5); cursor:pointer; transition:all .25s; color:var(--black);
+    }
+    .ask-reo-q:hover{border-color:var(--black); background:#fff;}
+    .ask-reo-answer{
+        font-size:.82rem; color:var(--gray-500); line-height:1.6; padding-top:.7rem; border-top:1px solid var(--border);
+        display:none;
+    }
+    .ask-reo-answer.show{display:block;}
+    html[data-theme="dark"] .ask-reo-panel{background:rgba(25,25,27,0.88);}
+    html[data-theme="dark"] .ask-reo-q{background:rgba(255,255,255,0.06); color:var(--black);}
+    html[data-theme="dark"] .ask-reo-q:hover{background:rgba(255,255,255,0.12);}
+    @media (max-width:600px){ .ask-reo-btn span{display:none;} }
+
+    @media print{
+        .scroll-robot, #hoverCursor, .click-ripple, .ticker-wrap, .scroll-mouse, header, footer,
+        .ask-reo-btn, .ask-reo-panel, #scrollProgress, .hero-photo-tag, .bg-accent { display:none !important; }
+        body{ background:#fff !important; color:#000 !important; }
+        .card{ background:#fff !important; backdrop-filter:none !important; box-shadow:none !important; border:1px solid #ccc !important; break-inside:avoid; }
+        .hero{ min-height:auto !important; padding:1rem 0 !important; }
+        section{ padding:1.2rem 0 !important; }
+        a{ color:#000 !important; text-decoration:underline !important; }
+    }
+    @media (prefers-reduced-motion:reduce){ .robot-body, .robot-eye, .robot-chest-light, .robot-thruster, .robot-spin.spinning{animation:none;} }
+
+    /* Dark mode: flip solid-fill buttons so they stay legible against a dark page */
+    html[data-theme="dark"] .btn-fill{background:rgba(245,245,246,0.9); color:#111112; border-color:rgba(17,17,18,0.1);}
+    html[data-theme="dark"] .btn-fill:hover{background:rgba(255,255,255,1);}
+    html[data-theme="dark"] .btn-fill i{color:#111112;}
+    html[data-theme="dark"] .nav-cta:hover{background:rgba(245,245,246,0.9); color:#111112;}
+    html[data-theme="dark"] .hero-photo-tag{background:rgba(245,245,246,0.9); color:#111112;}
+    html[data-theme="dark"] .robot-bubble{background:rgba(245,245,246,0.92); color:#111112;}
+    html[data-theme="dark"] .robot-bubble::after{background:rgba(245,245,246,0.92);}
+    html[data-theme="dark"] .hero-photo-full{filter:grayscale(100%) drop-shadow(0 26px 22px rgba(0,0,0,0.55)) brightness(1.15);}
+    html[data-theme="dark"] .btn-outline{background:rgba(255,255,255,0.08); color:var(--black); border-color:rgba(255,255,255,0.25);}
+    html[data-theme="dark"] .btn-outline:hover{background:rgba(255,255,255,0.18); border-color:rgba(255,255,255,0.4);}
+
     .click-ripple{
         position:fixed; width:10px; height:10px; border-radius:50%;
         border:1.5px solid var(--black); pointer-events:none; z-index:9999;
@@ -85,18 +300,18 @@
     }
     #hoverCursor .blob{
         position:absolute; inset:0;
-        background:rgba(255,255,255,0.22);
-        backdrop-filter:blur(6px) saturate(200%);
-        -webkit-backdrop-filter:blur(6px) saturate(200%);
-        border:1px solid rgba(255,255,255,0.65);
-        box-shadow:0 4px 14px rgba(17,17,18,0.14), inset -3px -3px 8px rgba(255,255,255,0.5), inset 3px 3px 8px rgba(17,17,18,0.05);
+        background:rgba(255,255,255,0.09);
+        backdrop-filter:blur(5px) saturate(220%);
+        -webkit-backdrop-filter:blur(5px) saturate(220%);
+        border:1px solid rgba(255,255,255,0.55);
+        box-shadow:0 4px 14px rgba(17,17,18,0.12), inset -3px -3px 8px rgba(255,255,255,0.4), inset 3px 3px 8px rgba(17,17,18,0.04);
         border-radius:60% 40% 55% 45% / 55% 45% 60% 40%;
         animation:liquidMorph 4.5s ease-in-out infinite;
         transition:width .4s cubic-bezier(.34,1.56,.64,1), height .4s cubic-bezier(.34,1.56,.64,1), background .3s ease, box-shadow .3s ease;
     }
     #hoverCursor .blob::before{
         content:''; position:absolute; top:16%; left:20%; width:32%; height:32%;
-        background:radial-gradient(circle, rgba(255,255,255,0.95), transparent 72%);
+        background:radial-gradient(circle, rgba(255,255,255,0.85), transparent 72%);
         border-radius:50%; filter:blur(0.5px);
     }
     @keyframes liquidMorph{
@@ -104,17 +319,12 @@
         33%{ border-radius:45% 55% 40% 60% / 40% 60% 45% 55%; }
         66%{ border-radius:55% 45% 60% 40% / 45% 55% 40% 60%; }
     }
-    #hoverCursor.pop{width:60px; height:60px;}
+    #hoverCursor.pop{width:64px; height:64px;}
     #hoverCursor.pop .blob{
-        border-radius:44%; background:rgba(255,255,255,0.2);
-        backdrop-filter:blur(12px) saturate(200%); -webkit-backdrop-filter:blur(12px) saturate(200%);
-        box-shadow:0 10px 30px rgba(17,17,18,0.2), inset -4px -4px 10px rgba(255,255,255,0.5), inset 4px 4px 10px rgba(17,17,18,0.06);
+        border-radius:42%; background:rgba(255,255,255,0.08);
+        backdrop-filter:blur(10px) saturate(220%); -webkit-backdrop-filter:blur(10px) saturate(220%);
+        box-shadow:0 12px 34px rgba(17,17,18,0.18), inset -4px -4px 10px rgba(255,255,255,0.45), inset 4px 4px 10px rgba(17,17,18,0.05);
     }
-    #hoverCursor .cursor-icon{
-        position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-        color:var(--black); font-size:0; opacity:0; transition:opacity .25s ease .1s; z-index:1;
-    }
-    #hoverCursor.pop .cursor-icon{font-size:.85rem; opacity:1;}
     @media (hover:none), (pointer:coarse){ #hoverCursor{display:none;} }
 
     .hero{padding:6rem 0 3.5rem; position:relative; overflow:hidden;}
@@ -160,19 +370,22 @@
     .hero-text-col p.hero-desc-reveal{color:var(--gray-500); font-size:1rem; max-width:440px; margin-bottom:2.1rem; font-weight:300;}
     .cta-row{display:flex; gap:1rem; flex-wrap:wrap;}
     .btn{
-        padding:.85rem 1.7rem; font-size:.88rem; font-weight:500; border:1px solid rgba(17,17,18,0.15);
-        transition:all .3s ease; display:inline-flex; align-items:center; gap:.5rem;
-        backdrop-filter:blur(10px) saturate(180%); -webkit-backdrop-filter:blur(10px) saturate(180%);
+        position:relative; overflow:hidden; padding:.85rem 1.7rem; font-size:.88rem; font-weight:500;
+        border:1px solid rgba(255,255,255,0.35); border-radius:50px;
+        transition:all .35s cubic-bezier(.2,.8,.2,1); display:inline-flex; align-items:center; gap:.5rem;
+        backdrop-filter:blur(16px) saturate(200%); -webkit-backdrop-filter:blur(16px) saturate(200%);
+        transform:perspective(600px) translateY(0);
     }
-    .btn i{transition:transform .3s ease;}
+    .btn::before{content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(135deg, rgba(255,255,255,0.35), transparent 50%);}
+    .btn i{transition:transform .3s ease; position:relative;}
     .btn:hover i{transform:translateX(4px);}
     .btn-fill{
-        background:rgba(27,27,29,0.82); color:#fff; border-color:rgba(255,255,255,0.12);
-        box-shadow:0 4px 14px rgba(17,17,18,0.12), inset 0 1px 0 rgba(255,255,255,0.1);
+        background:rgba(17,17,18,0.62); color:#fff; border-color:rgba(255,255,255,0.2);
+        box-shadow:inset 0 1px 1px rgba(255,255,255,0.15), 0 10px 24px rgba(17,17,18,0.14);
     }
-    .btn-fill:hover{background:rgba(17,17,18,0.92); transform:translateY(-2px); box-shadow:var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.15);}
-    .btn-outline{color:var(--black); background:rgba(255,255,255,0.4); box-shadow:inset 0 1px 0 rgba(255,255,255,0.6);}
-    .btn-outline:hover{background:rgba(17,17,18,0.9); color:#fff; border-color:rgba(17,17,18,0.9); transform:translateY(-2px); box-shadow:var(--shadow-md);}
+    .btn-fill:hover{background:rgba(17,17,18,0.78); transform:perspective(600px) translateY(-3px); box-shadow:inset 0 1px 1px rgba(255,255,255,0.2), 0 16px 34px rgba(17,17,18,0.2);}
+    .btn-outline{color:var(--black); background:rgba(255,255,255,0.1); box-shadow:inset 0 1px 1px rgba(255,255,255,0.5), 0 8px 20px rgba(17,17,18,0.06);}
+    .btn-outline:hover{background:rgba(17,17,18,0.22); color:var(--black); border-color:rgba(255,255,255,0.5); transform:perspective(600px) translateY(-3px); box-shadow:inset 0 1px 1px rgba(255,255,255,0.4), 0 14px 28px rgba(17,17,18,0.12);}
     .line-mask{overflow:hidden; display:block;}
     .line-inner{display:block; transform:translateY(110%);}
 
@@ -253,13 +466,30 @@
     @media (max-width:600px){ .card-grid, .card-grid.two{grid-template-columns:1fr;} }
 
     .card{
-        background:rgba(255,255,255,0.55); backdrop-filter:blur(14px) saturate(180%); -webkit-backdrop-filter:blur(14px) saturate(180%);
-        border:1px solid rgba(255,255,255,0.6); box-shadow:0 4px 18px rgba(17,17,18,0.05), inset 0 1px 0 rgba(255,255,255,0.5);
-        transition:border-color .3s, transform .3s, box-shadow .3s, background .3s;
+        position:relative; overflow:hidden; border-radius:18px;
+        background:rgba(255,255,255,0.09);
+        backdrop-filter:blur(22px) saturate(200%); -webkit-backdrop-filter:blur(22px) saturate(200%);
+        border:1px solid rgba(255,255,255,0.35);
+        box-shadow:inset 0 1px 1px rgba(255,255,255,0.5), inset 0 -1px 1px rgba(17,17,18,0.04),
+                   0 20px 40px rgba(17,17,18,0.10), 0 4px 10px rgba(17,17,18,0.06);
+        transform:perspective(800px) rotateX(0deg) translateY(0) scale(1);
+        transition:transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease, background .35s ease, border-color .35s ease;
     }
-    .card:hover{
-        border-color:rgba(17,17,18,0.18); transform:translateY(-6px);
-        background:rgba(255,255,255,0.72); box-shadow:var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.6);
+    .card::before{
+        content:''; position:absolute; inset:0; pointer-events:none;
+        background:linear-gradient(135deg, rgba(255,255,255,0.4), transparent 45%);
+    }
+    @media (hover:hover) and (pointer:fine){
+        .card:hover{
+            transform:perspective(800px) rotateX(-3deg) translateY(-10px) scale(1.015);
+            background:rgba(255,255,255,0.16);
+            border-color:rgba(255,255,255,0.55);
+            box-shadow:inset 0 1px 1px rgba(255,255,255,0.6), inset 0 -1px 1px rgba(17,17,18,0.05),
+                       0 30px 60px rgba(17,17,18,0.16), 0 10px 20px rgba(17,17,18,0.08);
+        }
+    }
+    @media (max-width:768px){
+        .card{ backdrop-filter:blur(10px) saturate(160%); -webkit-backdrop-filter:blur(10px) saturate(160%); background:rgba(255,255,255,0.5); }
     }
 
     /* About */
@@ -366,6 +596,30 @@
 </head>
 <body>
 
+<div id="scrollProgress"></div>
+
+<div class="scroll-robot" id="scrollRobot" aria-label="Reo, your study and career companion">
+    <div class="robot-tilt" id="robotTilt">
+        <div class="robot-spin" id="robotSpin">
+            <div class="robot-body" id="robotBody">
+                <div class="robot-head">
+                    <span class="robot-antenna"></span>
+                    <span class="robot-z">z</span>
+                    <span class="robot-eye"></span>
+                    <span class="robot-eye"></span>
+                </div>
+                <div class="robot-torso">
+                    <span class="robot-arm left"><span class="robot-hand"></span></span>
+                    <span class="robot-arm right"><span class="robot-hand"></span></span>
+                    <span class="robot-chest-light"></span>
+                </div>
+                <div class="robot-thruster"></div>
+            </div>
+        </div>
+        <div class="robot-bubble" id="robotBubble"></div>
+    </div>
+</div>
+
 <header id="header">
     <nav class="container">
         <div class="logo">
@@ -383,6 +637,9 @@
             <li><a href="#contact">Contact</a></li>
         </ul>
         <div class="nav-right">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
+            </button>
             <a href="https://github.com/Ob09" target="_blank" rel="noopener" class="nav-cta">GitHub</a>
             <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
                 <i class="fas fa-bars"></i>
@@ -432,6 +689,7 @@
             <div class="stat"><span class="stat-num" data-target="44" data-suffix="K+">0</span><span class="stat-label">Records Modelled</span></div>
             <div class="stat"><span class="stat-num" data-target="2" data-suffix="yr">0</span><span class="stat-label">Experience</span></div>
             <div class="stat"><span class="stat-num" data-target="6" data-suffix="">0</span><span class="stat-label">Skill Areas</span></div>
+            <div class="stat"><span class="stat-num" id="githubRepoStat" data-target="6" data-suffix="">0</span><span class="stat-label">GitHub Repos <i class="fas fa-circle-notch fa-spin" id="githubStatSpinner" style="font-size:.6rem; opacity:.6;"></i></span></div>
         </div>
     </div>
 </div>
@@ -707,10 +965,11 @@
         <h2>Let's talk data.</h2>
         <p class="contact-sub">I'm always interested in discussing new opportunities, collaborations, or projects in data science and analytics.</p>
         <div class="contact-links">
-            <a href="mailto:obedhkjoby09@gmail.com" class="btn btn-fill"><i class="fas fa-envelope"></i> Email Me</a>
+            <a href="mailto:obedhkjoby09@gmail.com" class="btn btn-fill" id="emailMeBtn"><i class="fas fa-envelope"></i> Email Me</a>
             <a href="https://linkedin.com/in/obedh-k-joby" target="_blank" rel="noopener" class="btn btn-outline"><i class="fab fa-linkedin"></i> LinkedIn</a>
             <a href="https://github.com/Ob09" target="_blank" rel="noopener" class="btn btn-outline"><i class="fab fa-github"></i> GitHub</a>
-            <a href="tel:+3530894119008" class="btn btn-outline"><i class="fas fa-phone"></i> Call Me</a>
+            <a href="tel:+3530894119008" class="btn btn-outline" id="callMeBtn"><i class="fas fa-phone"></i> Call Me</a>
+            <button class="btn btn-outline" id="downloadResumeBtn"><i class="fas fa-download"></i> Download Resume</button>
         </div>
         <div class="status-line"><span class="dot"></span>Available for freelance projects and full-time opportunities</div>
     </div>
@@ -728,11 +987,144 @@
     </div>
 </footer>
 
+<div class="ask-reo-btn" id="askReoBtn"><i class="fas fa-comment-dots"></i><span>Ask Reo</span></div>
+<div class="ask-reo-panel" id="askReoPanel">
+    <h4><i class="fas fa-robot"></i> Ask Reo anything</h4>
+    <div class="ask-reo-questions" id="askReoQuestions">
+        <button class="ask-reo-q" data-a="He's a Data Analyst who builds ETL pipelines, ML models, and BI dashboards — MSc in Data Analytics from Dundalk Institute of Technology.">What does Obedh do?</button>
+        <button class="ask-reo-q" data-a="Python, SQL, Docker, Airflow, PySpark, Power BI, Tableau, Neo4j and more — the Skills section has the full list.">What tools does he use?</button>
+        <button class="ask-reo-q" data-a="Yes! He's open to Data Analyst / Data Engineer roles, freelance or full-time.">Is he available for work?</button>
+        <button class="ask-reo-q" data-a="Best via email at obedhkjoby09@gmail.com or LinkedIn — both are linked in the Contact section.">How do I contact him?</button>
+        <button class="ask-reo-q" data-a="Probably the Financial Market Data Pipeline — a full Docker/Airflow/Spark pipeline with a live dashboard. It's on the Projects page.">What's his best project?</button>
+    </div>
+    <div class="ask-reo-answer" id="askReoAnswer"></div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
     gsap.registerPlugin(ScrollTrigger);
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Scroll progress bar
+    const scrollProgressBar = document.getElementById('scrollProgress');
+    function updateScrollProgress() {
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+        if (scrollProgressBar) scrollProgressBar.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+    window.addEventListener('resize', updateScrollProgress);
+    updateScrollProgress();
+
+    // Dark mode toggle — preference saved only in this browser's localStorage, nothing sent anywhere
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('obedh-portfolio-theme');
+    if (savedTheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('obedh-portfolio-theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('obedh-portfolio-theme', 'dark');
+            }
+        });
+    }
+
+    // Copy-to-clipboard for contact buttons
+    function showCopiedToast(text) {
+        let toast = document.querySelector('.copied-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.className = 'copied-toast';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = text;
+        toast.classList.add('show');
+        clearTimeout(toast._t);
+        toast._t = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+    const emailMeBtn = document.getElementById('emailMeBtn');
+    const callMeBtn = document.getElementById('callMeBtn');
+    if (emailMeBtn && navigator.clipboard) {
+        emailMeBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText('obedhkjoby09@gmail.com').then(() => showCopiedToast('Email copied to clipboard'));
+        });
+    }
+    if (callMeBtn && navigator.clipboard) {
+        callMeBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText('+353 089 411 9008').then(() => showCopiedToast('Phone number copied'));
+        });
+    }
+
+    // Sparkle burst on Email Me
+    function sparkleBurst(x, y) {
+        if (reduceMotion) return;
+        for (let i = 0; i < 14; i++) {
+            const p = document.createElement('div');
+            p.className = 'sparkle-particle';
+            p.style.left = x + 'px';
+            p.style.top = y + 'px';
+            document.body.appendChild(p);
+            const angle = (Math.PI * 2 * i) / 14 + Math.random() * 0.4;
+            const dist = 60 + Math.random() * 60;
+            gsap.to(p, {
+                x: Math.cos(angle) * dist, y: Math.sin(angle) * dist - 20,
+                opacity: 0, scale: 0.3, duration: 0.8 + Math.random() * 0.4, ease: 'power2.out',
+                onComplete: () => p.remove()
+            });
+        }
+    }
+    if (emailMeBtn) {
+        emailMeBtn.addEventListener('click', (e) => {
+            const rect = emailMeBtn.getBoundingClientRect();
+            sparkleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        });
+    }
+
+    // Download Resume — clean print-friendly stylesheet, triggers the browser's own print dialog
+    const downloadResumeBtn = document.getElementById('downloadResumeBtn');
+    if (downloadResumeBtn) {
+        downloadResumeBtn.addEventListener('click', () => window.print());
+    }
+
+    // Live GitHub stat — public, unauthenticated API call, no token, same data visible on the public profile
+    const githubRepoStat = document.getElementById('githubRepoStat');
+    const githubStatSpinner = document.getElementById('githubStatSpinner');
+    if (githubRepoStat) {
+        fetch('https://api.github.com/users/Ob09/repos?per_page=100')
+            .then(r => r.ok ? r.json() : Promise.reject())
+            .then(repos => {
+                const count = Array.isArray(repos) ? repos.filter(r => !r.fork).length : 6;
+                githubRepoStat.dataset.target = count;
+                if (githubStatSpinner) githubStatSpinner.remove();
+            })
+            .catch(() => { if (githubStatSpinner) githubStatSpinner.remove(); });
+    }
+
+    // Ask Reo — fully scripted FAQ, no external calls, no data leaves the page
+    const askReoBtn = document.getElementById('askReoBtn');
+    const askReoPanel = document.getElementById('askReoPanel');
+    const askReoAnswer = document.getElementById('askReoAnswer');
+    if (askReoBtn && askReoPanel) {
+        askReoBtn.addEventListener('click', () => {
+            askReoPanel.classList.toggle('open');
+        });
+        document.querySelectorAll('.ask-reo-q').forEach(btn => {
+            btn.addEventListener('click', () => {
+                askReoAnswer.textContent = btn.dataset.a;
+                askReoAnswer.classList.add('show');
+            });
+        });
+        document.addEventListener('click', (e) => {
+            if (!askReoPanel.contains(e.target) && !askReoBtn.contains(e.target)) {
+                askReoPanel.classList.remove('open');
+            }
+        });
+    }
 
     document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.addEventListener('click', e => {
@@ -744,6 +1136,197 @@
     window.addEventListener('scroll', () => {
         document.getElementById('header').classList.toggle('scrolled', window.scrollY > 40);
     });
+
+    // Reo — Obedh's study & career companion.
+    // Roams the page while you scroll; docks out of the way at the nearest side while you're reading.
+    const scrollRobot = document.getElementById('scrollRobot');
+    const robotTilt = document.getElementById('robotTilt');
+    const robotSpin = document.getElementById('robotSpin');
+    const robotBody = document.getElementById('robotBody');
+    const robotBubble = document.getElementById('robotBubble');
+    if (scrollRobot && robotBubble) {
+        const trackTop = 110, trackBottom = 110;
+        const edgeMargin = 34, bubbleClearance = 230;
+        let curTop = trackTop, curLeft = 34, prevLeft = 34;
+        let targetTop = trackTop, targetLeft = 34;
+        let hopX = 0, hopY = 0;
+        let isScrolling = false;
+        let scrollStopTimer = null;
+
+        // Reo falls asleep after a stretch of no activity, wakes up on the next scroll/move
+        let idleSleepTimer = null;
+        function scheduleSleep() {
+            clearTimeout(idleSleepTimer);
+            idleSleepTimer = setTimeout(() => { robotBody.classList.add('sleeping'); }, 30000);
+        }
+        function wakeReo() {
+            if (robotBody.classList.contains('sleeping')) robotBody.classList.remove('sleeping');
+            scheduleSleep();
+        }
+        window.addEventListener('scroll', wakeReo, { passive: true });
+        window.addEventListener('mousemove', wakeReo, { passive: true });
+        scheduleSleep();
+
+        function computeTargets() {
+            const trackHeight = window.innerHeight - trackTop - trackBottom;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? Math.min(window.scrollY / docHeight, 1) : 0;
+            targetTop = trackTop + progress * trackHeight;
+
+            const maxLeft = Math.max(edgeMargin, window.innerWidth - bubbleClearance);
+            const usable = maxLeft - edgeMargin;
+
+            if (isScrolling) {
+                const t = performance.now() / 1000;
+                const wave = 0.5 + 0.46 * Math.sin(progress * Math.PI * 5) + 0.06 * Math.sin(t * 0.35);
+                targetLeft = edgeMargin + Math.max(0, Math.min(1, wave)) * usable;
+            } else {
+                // Reading / idle: dock to whichever side is nearest, out of the content's way
+                const mid = edgeMargin + usable / 2;
+                targetLeft = (curLeft < mid) ? edgeMargin : maxLeft;
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            isScrolling = true;
+            clearTimeout(scrollStopTimer);
+            scrollStopTimer = setTimeout(() => { isScrolling = false; }, 550);
+            computeTargets();
+        }, { passive: true });
+        window.addEventListener('resize', computeTargets);
+        computeTargets();
+
+        if (reduceMotion) {
+            scrollRobot.style.top = targetTop + 'px';
+            scrollRobot.style.left = targetLeft + 'px';
+        } else {
+            (function floatLoop() {
+                computeTargets();
+                const ease = isScrolling ? 0.05 : 0.07;
+                curTop += (targetTop - curTop) * ease;
+                prevLeft = curLeft;
+                curLeft += (targetLeft - curLeft) * ease;
+                scrollRobot.style.top = (curTop + hopY) + 'px';
+                scrollRobot.style.left = (curLeft + hopX) + 'px';
+                const tilt = Math.max(-14, Math.min(14, (curLeft - prevLeft) * 4));
+                if (robotTilt) robotTilt.style.transform = `rotate(${tilt}deg)`;
+                requestAnimationFrame(floatLoop);
+            })();
+        }
+
+        // Hover: spin 360, and hop both vertically and horizontally
+        if (robotSpin) {
+            const hopState = { x: 0, y: 0 };
+            scrollRobot.addEventListener('mouseenter', () => {
+                robotSpin.classList.remove('spinning');
+                void robotSpin.offsetWidth;
+                robotSpin.classList.add('spinning');
+
+                const dir = curLeft < window.innerWidth / 2 ? 1 : -1;
+                gsap.killTweensOf(hopState);
+                gsap.to(hopState, {
+                    x: dir * 26, y: -26, duration: 0.28, ease: 'power2.out',
+                    onUpdate: () => { hopX = hopState.x; hopY = hopState.y; },
+                    onComplete: () => {
+                        gsap.to(hopState, {
+                            x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.45)',
+                            onUpdate: () => { hopX = hopState.x; hopY = hopState.y; }
+                        });
+                    }
+                });
+            });
+            robotSpin.addEventListener('animationend', () => robotSpin.classList.remove('spinning'));
+        }
+
+        // Bubble helper — flips to the open side of the screen so it's never clipped
+        let bubbleTimeout = null;
+        function sayBubble(text, duration) {
+            const onRight = curLeft > window.innerWidth / 2;
+            robotBubble.classList.toggle('on-right', onRight);
+            robotBubble.textContent = text;
+            robotBubble.classList.add('show');
+            robotBody.classList.remove('pop');
+            void robotBody.offsetWidth;
+            robotBody.classList.add('pop');
+            clearTimeout(bubbleTimeout);
+            bubbleTimeout = setTimeout(() => robotBubble.classList.remove('show'), duration);
+        }
+
+        // Click: a bigger, excited jump plus a random tip
+        const clickMessages = [
+            "You found me! \u{1F389}",
+            "Check out the Projects page!",
+            "Obedh built all this hands-on",
+            "Try the timeline below \u{1F447}",
+            "There's a GitHub link up top",
+            "Thanks for clicking me!"
+        ];
+        if (robotSpin) {
+            const clickHopState = { x: 0, y: 0 };
+            scrollRobot.addEventListener('click', () => {
+                robotSpin.classList.remove('spinning');
+                void robotSpin.offsetWidth;
+                robotSpin.classList.add('spinning');
+
+                const dir = curLeft < window.innerWidth / 2 ? 1 : -1;
+                gsap.killTweensOf(clickHopState);
+                gsap.to(clickHopState, {
+                    x: dir * 34, y: -46, duration: 0.3, ease: 'power2.out',
+                    onUpdate: () => { hopX = clickHopState.x; hopY = clickHopState.y; },
+                    onComplete: () => {
+                        gsap.to(clickHopState, {
+                            x: 0, y: 0, duration: 0.8, ease: 'bounce.out',
+                            onUpdate: () => { hopX = clickHopState.x; hopY = clickHopState.y; }
+                        });
+                    }
+                });
+
+                const msg = clickMessages[Math.floor(Math.random() * clickMessages.length)];
+                sayBubble(msg, 2200);
+                lastLabel = null;
+            });
+        }
+
+        // Section labels — Reo explains where you are
+        const sectionLabels = {
+            home: 'Home', about: 'About Me', education: 'Education', skills: 'Skills',
+            work: 'Projects', experience: 'Experience', portfolio: 'Client Work', contact: 'Contact'
+        };
+        let lastLabel = null;
+        let introDone = false;
+
+        function popBubble(label) {
+            if (!introDone || label === lastLabel) return;
+            lastLabel = label;
+            sayBubble(label, 1800);
+        }
+
+        // Welcome sequence, then hand off to section announcements
+        setTimeout(() => {
+            lastLabel = 'intro-1';
+            sayBubble("Hi, I'm Reo \u{1F44B} Obedh's companion", 2400);
+        }, 900);
+        setTimeout(() => {
+            lastLabel = 'intro-2';
+            sayBubble("I'll guide you through his portfolio", 2600);
+        }, 3500);
+        setTimeout(() => { introDone = true; }, 6200);
+
+        if (!reduceMotion) {
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && sectionLabels[entry.target.id]) {
+                        popBubble(sectionLabels[entry.target.id]);
+                    }
+                });
+            }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+
+            Object.keys(sectionLabels).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) sectionObserver.observe(el);
+            });
+        }
+    }
 
     // Mobile nav toggle
     const navToggle = document.getElementById('navToggle');
@@ -795,7 +1378,7 @@
     if (fineCursor && !reduceMotion) {
         const hoverCursor = document.createElement('div');
         hoverCursor.id = 'hoverCursor';
-        hoverCursor.innerHTML = '<div class="blob"></div><span class="cursor-icon"><i class="fas fa-arrow-up-right-from-square"></i></span>';
+        hoverCursor.innerHTML = '<div class="blob"></div>';
         document.body.appendChild(hoverCursor);
 
         const xTo = gsap.quickTo(hoverCursor, 'left', { duration: 0.45, ease: 'power3' });
