@@ -753,36 +753,45 @@
         <div class="card" id="proj-co2">
             <div class="work-photo-zoom"><div class="work-photo-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l1.5-4.8A2 2 0 017.4 10h9.2a2 2 0 011.9 1.2L20 16"/><rect x="2.5" y="16" width="19" height="3.4" rx="1.4"/><circle cx="7.5" cy="19.6" r="1.3" fill="white" stroke="none"/><circle cx="16.5" cy="19.6" r="1.3" fill="white" stroke="none"/></svg></div></div>
             <div class="card-top">
-                <span class="card-badge">Statistical Modelling</span>
-                <h2>CO2 Emission Analysis on Vehicles</h2>
-                <p class="card-overview">A regression-based study isolating which vehicle characteristics actually move the needle on CO2 emissions.</p>
+                <span class="card-badge">Statistics · Interactive Dashboard</span>
+                <h2>Vehicle Emissions Analyzer</h2>
+                <p class="card-overview">A statistical study of 7,385 vehicles that isolates what really drives CO2 output, plus an interactive dashboard for consumers and policymakers to explore it.</p>
             </div>
             <div class="tech-stack-summary">
-                <span class="tag">Python</span><span class="tag">Statsmodels</span><span class="tag">Seaborn</span><span class="tag claude">Claude-assisted</span>
+                <span class="tag">Python</span><span class="tag">Statistics</span><span class="tag">Plotly</span><span class="tag">Shiny for Python</span><span class="tag claude">Claude-assisted</span>
             </div>
             <details class="case-study">
                 <summary class="toggle-btn"><i class="fas fa-chevron-down chevron"></i> View Full Case Study</summary>
                 <div class="details-body">
                     <div class="dsection">
                         <h3 class="dsection-title"><i class="fas fa-bullseye"></i> The Business Problem</h3>
-                        <p class="dsection-content">Manufacturers and regulators need to know which vehicle characteristics actually move the needle on emissions, not just correlate with them.</p>
+                        <p class="dsection-content">With emissions regulations tightening across the auto industry, manufacturers, regulators and buyers need to know which vehicle characteristics actually drive CO2 emissions, not just correlate with them.</p>
                     </div>
                     <div class="dsection">
                         <h3 class="dsection-title"><i class="fas fa-diagram-project"></i> My Approach</h3>
                         <div class="dsection-content">
                             <ul>
-                                <li>Cleaned a large Canadian vehicle emissions dataset in a Jupyter Notebook and engineered features with Pandas.</li>
-                                <li>Built regression models in Statsmodels to isolate the strongest predictors.</li>
-                                <li>Visualised the relationships in Seaborn and Matplotlib.</li>
+                                <li>Analysed the <strong>CO2 Emissions Canada dataset</strong> (7,385 vehicles) using Pearson correlation, simple and multiple linear regression, chi-square, and one-way ANOVA tests.</li>
+                                <li>Found that <strong>engine size and fuel consumption together explain 87.9%</strong> of the variance in CO2 emissions (R² = 0.879, p &lt; 0.001).</li>
+                                <li>Built and deployed an interactive <strong>Vehicle Emissions Analyzer</strong> dashboard in Python, Plotly, and Shiny for Python, letting users explore how engine size, fuel type, and vehicle class drive CO2 output.</li>
                             </ul>
+                        </div>
+                    </div>
+                    <div class="dsection">
+                        <h3 class="dsection-title"><i class="fas fa-chart-simple"></i> By the Numbers</h3>
+                        <div class="metrics">
+                            <div class="metric-card"><div class="metric-value">7,385</div><div class="metric-label">Vehicles Analysed</div></div>
+                            <div class="metric-card"><div class="metric-value">87.9%</div><div class="metric-label">Variance Explained</div></div>
+                            <div class="metric-card"><div class="metric-value">4</div><div class="metric-label">Statistical Tests</div></div>
                         </div>
                     </div>
                     <div class="dsection">
                         <h3 class="dsection-title"><i class="fas fa-layer-group"></i> Full Tech Stack</h3>
                         <div class="full-tech-stack">
                             <span class="tech-tag-full">Python</span><span class="tech-tag-full">Pandas</span>
-                            <span class="tech-tag-full">Seaborn</span><span class="tech-tag-full">Matplotlib</span>
-                            <span class="tech-tag-full">Statsmodels</span><span class="tech-tag-full">Jupyter Notebook</span><span class="tech-tag-full">Git</span>
+                            <span class="tech-tag-full">Plotly</span><span class="tech-tag-full">Shiny for Python</span>
+                            <span class="tech-tag-full">Linear Regression</span><span class="tech-tag-full">ANOVA</span><span class="tech-tag-full">Chi-square</span>
+                            <span class="tech-tag-full method">Hypothesis Testing</span><span class="tech-tag-full">Git</span>
                         </div>
                     </div>
                     <div class="dsection">
@@ -794,7 +803,62 @@
             </details>
         </div>
 
-        <!-- 7. Spotify Trends Analysis -->
+        <!-- 7. Time Series Forecasting -->
+        <div class="card" id="proj-timeseries">
+            <div class="work-photo-zoom"><div class="work-photo-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M3 15l4-4 3 3 4-6 3 3"/><path d="M17 11l4-3" stroke-dasharray="1.5 2"/></svg></div></div>
+            <div class="card-top">
+                <span class="card-badge">Time Series Forecasting</span>
+                <h2>Temperature &amp; Humidity Forecasting</h2>
+                <p class="card-overview">Statistical and deep learning forecasting models compared head-to-head on a year of Ho Chi Minh City weather data.</p>
+            </div>
+            <div class="tech-stack-summary">
+                <span class="tag">Python</span><span class="tag">ARIMA</span><span class="tag">SARIMA</span><span class="tag">LSTM</span><span class="tag claude">Claude-assisted</span>
+            </div>
+            <details class="case-study">
+                <summary class="toggle-btn"><i class="fas fa-chevron-down chevron"></i> View Full Case Study</summary>
+                <div class="details-body">
+                    <div class="dsection">
+                        <h3 class="dsection-title"><i class="fas fa-bullseye"></i> The Business Problem</h3>
+                        <p class="dsection-content">Weather-sensitive sectors — energy, agriculture, logistics — plan operations around what temperature and humidity will do next. They need forecasts they can trust, and to know which modelling approach actually delivers.</p>
+                    </div>
+                    <div class="dsection">
+                        <h3 class="dsection-title"><i class="fas fa-diagram-project"></i> My Approach</h3>
+                        <div class="dsection-content">
+                            <ul>
+                                <li>Tested stationarity of <strong>369 days</strong> of temperature and humidity data for Ho Chi Minh City with the <strong>Augmented Dickey-Fuller test</strong>.</li>
+                                <li>Applied log transformation and differencing to make both series stationary before modelling.</li>
+                                <li>Built and compared <strong>ARIMA, SARIMA, and LSTM</strong> models on a 295/74-day train/test split.</li>
+                                <li>LSTM achieved the lowest error on both variables, outperforming the statistical baselines.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="dsection">
+                        <h3 class="dsection-title"><i class="fas fa-chart-simple"></i> By the Numbers</h3>
+                        <div class="metrics">
+                            <div class="metric-card"><div class="metric-value">369</div><div class="metric-label">Days of Data</div></div>
+                            <div class="metric-card"><div class="metric-value">3</div><div class="metric-label">Models Compared</div></div>
+                            <div class="metric-card"><div class="metric-value">1.13</div><div class="metric-label">Temp RMSE (LSTM)</div></div>
+                            <div class="metric-card"><div class="metric-value">11.64</div><div class="metric-label">Humidity RMSE (LSTM)</div></div>
+                        </div>
+                    </div>
+                    <div class="dsection">
+                        <h3 class="dsection-title"><i class="fas fa-layer-group"></i> Full Tech Stack</h3>
+                        <div class="full-tech-stack">
+                            <span class="tech-tag-full">Python</span><span class="tech-tag-full">Pandas</span>
+                            <span class="tech-tag-full">ARIMA</span><span class="tech-tag-full">SARIMA</span><span class="tech-tag-full">LSTM</span>
+                            <span class="tech-tag-full method">ADF Stationarity Test</span><span class="tech-tag-full">Git</span>
+                        </div>
+                    </div>
+                    <div class="dsection">
+                        <div class="project-links">
+                            <a href="https://linkedin.com/in/obedh-k-joby" target="_blank" rel="noopener" class="project-link primary"><i class="fab fa-linkedin"></i> Ask About This Project</a>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <!-- 8. Spotify Trends Analysis -->
         <div class="card" id="proj-spotify">
             <div class="work-photo-zoom"><div class="work-photo-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v-1a8 8 0 0116 0v1"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/></svg></div></div>
             <div class="card-top">
@@ -810,7 +874,7 @@
                 <div class="details-body">
                     <div class="dsection">
                         <h3 class="dsection-title"><i class="fas fa-bullseye"></i> The Business Problem</h3>
-                        <p class="dsection-content">Raw listening data doesn't tell a story on its own — decision-makers needed to see how trends shift across artists, genres and time without digging through spreadsheets.</p>
+                        <p class="dsection-content">Streaming platforms rely on listening data to shape content and audience strategy, but raw data doesn't tell a story on its own — decision-makers needed to see how trends shift across artists, genres and time without digging through spreadsheets.</p>
                     </div>
                     <div class="dsection">
                         <h3 class="dsection-title"><i class="fas fa-diagram-project"></i> My Approach</h3>
@@ -837,7 +901,7 @@
             </details>
         </div>
 
-        <!-- 8. Portfolio Website -->
+        <!-- 9. Portfolio Website -->
         <div class="card" id="proj-portfolio">
             <div class="work-photo-zoom"><div class="work-photo-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/><path d="M9 13.5l-2 2 2 2"/><path d="M15 13.5l2 2-2 2"/></svg></div></div>
             <div class="card-top">
